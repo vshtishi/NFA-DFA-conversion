@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Converter {
 
@@ -6,6 +7,7 @@ public class Converter {
         final String EPSILON = "Eps";
 
         int i, j;
+        int last_index = 0;
 
         int states_count = 6;
         int alphabet_count = 2;
@@ -27,6 +29,9 @@ public class Converter {
         System.out.print(EPSILON);
         System.out.println(" ");
         E_AFJD sample = new E_AFJD();
+        sample.setStates(states);
+        sample.setAlphabet(alphabet);
+        AFD result = new AFD();
         ArrayList<String> A_transition = new ArrayList<>();
         ArrayList<String> B_transition = new ArrayList<>();
         ArrayList<String> C_transition = new ArrayList<>();
@@ -78,6 +83,21 @@ public class Converter {
             System.out.println(" " + table.get(i));
             System.out.println("   |");
         }
+
+        sample.setStates(states);
+        int closure_ar[] = new int[states_count];
+        String closure_table[] = new String[states_count];
+
+        closure_table = sample.showClosure(closure_ar);
+        HashMap<String, Integer> AFD_states = new HashMap<>();
+        AFD_states.put("-", 1);
+
+        String buffer = "                ";
+
+        buffer = closure_table[0];
+        System.out.println(buffer);
+        AFD_states.put(buffer, 0);
+
 
     }
 }
