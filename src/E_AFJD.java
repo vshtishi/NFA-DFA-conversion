@@ -23,6 +23,14 @@ public class E_AFJD {
         table.add(row);
     }
 
+    public int getAlphabetLength(){
+        return this.alphabet.length;
+    }
+
+    public char[] getStates(){
+         return this.states;
+    }
+
     public ArrayList<ArrayList<String>> getTable() {
         return this.table;
     }

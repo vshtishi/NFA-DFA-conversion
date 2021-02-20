@@ -7,7 +7,9 @@ public class Converter {
         final String EPSILON = "Eps";
 
         int i, j;
+        int zz = 0;
         int last_index = 0;
+        String T_buf = new String();
 
         int states_count = 6;
         int alphabet_count = 2;
@@ -89,15 +91,76 @@ public class Converter {
         String closure_table[] = new String[states_count];
 
         closure_table = sample.showClosure(closure_ar);
-        HashMap<String, Integer> AFD_states = new HashMap<>();
-        AFD_states.put("-", 1);
+        AFD_State[] AFD_states = new AFD_State[states_count];
+
+        for (int x = 0; x < states_count; x++) {
+            AFD_states[x] = new AFD_State();
+        }
+
+        AFD_states[last_index++].setState("-");
+        AFD_states[last_index - 1].setStatus(1);
 
         String buffer = "                ";
 
         buffer = closure_table[0];
-        System.out.println(buffer);
-        AFD_states.put(buffer, 0);
 
+        AFD_states[last_index++].setState(buffer);
+
+
+        int Sm = 1, ind = 1;
+        int start_index = 1;
+
+// Filling up the DFA table with transition values
+// Till new states can be entered in DFA table
+
+
+        while (ind != -1) {
+
+            AFD_states[start_index].setStatus(1);
+            Sm = 0;
+            ArrayList<String> transition = new ArrayList<>();
+            for (i = 0; i < alphabet_count; i++) {
+
+                T_buf = result.trans(buffer, i, closure_table, states_count, sample, T_buf);
+
+                // storing the new DFA state in buffer
+                transition.add(T_buf);
+
+                // parameter to control new states
+                int append = 1;
+
+// To check the current state is already
+// being used as a DFA state or not in
+// DFA transition table
+                for (int m = 0; m < last_index; m++) {
+                    if ((AFD_states[m].getState()).equals(T_buf))
+                        append = 0;
+                }
+
+                if (append == 1) {
+                    AFD_states[last_index++].setState(T_buf);
+
+
+                    AFD_states[last_index - 1].setStatus(0);
+                }
+
+                Sm = Sm + append;
+
+
+            }
+            ind = result.indexing(AFD_states, last_index);
+
+            if (ind != -1)
+                buffer = AFD_states[++start_index].getState();
+
+            zz++;
+            result.setTableRow(transition);
+
+        }
+// display the DFA TABLE
+        result.Display_DFA(last_index, alphabet_count, zz, AFD_states);
 
     }
+
+
 }
